@@ -1,361 +1,225 @@
-// Calibration state
-let isCalibrating = false;
-let calibrationEvents = [];
-let calibrationStartTime = 0;
-let calibrationTimer = null;
+:root {
+    --green-main: #006341;
+    --green-dark: #004b32;
+    --accent: #00a86b;
+    --bg-light: #f5f7f6;
+    --text-main: #111111;
+    --text-muted: #555555;
+    --white: #ffffff;
+}
 
-let calibrationMetrics = {
-    samplingRateHz: null,
-    meanDtMs: null,
-    jitterMs: null,
-    durationMs: null,
-    eventCount: 0,
-    calibrationFactor: null
-};
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-// PVG test state
-let reactionTimes = [];
-let testRunning = false;
-let stimulusShown = false;
-let stimulusTime = 0;
-let testStartTime = 0;
-const testDuration = 120000; // 2 minutes
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg-light);
+    color: var(--text-main);
+}
 
-let testStartDateString = "";
-let testStartClock = "";
-let testEndClock = "";
+/* HEADER */
+.app-header {
+    background: var(--green-main);
+    color: var(--white);
+    padding: 16px;
+    text-align: center;
+}
 
-// Elements
-const startCalibrationBtn = document.getElementById("startCalibrationBtn");
-const toInputsBtn = document.getElementById("toInputsBtn");
-const calibrationSection = document.getElementById("calibrationSection");
-const inputsSection = document.getElementById("inputsSection");
-const testSection = document.getElementById("testSection");
-const resultsSection = document.getElementById("resultsSection");
-const calibrationSummary = document.getElementById("calibrationSummary");
+.app-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
 
-const sliderTrack = document.getElementById("sliderTrack");
-const sliderHandle = document.getElementById("sliderHandle");
+/* LAYOUT */
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+}
 
-const startTestBtn = document.getElementById("startTestBtn");
-const testArea = document.getElementById("testArea");
-const stimulus = document.getElementById("stimulus");
-const resultText = document.getElementById("resultText");
-const shareBtn = document.getElementById("shareBtn");
+h2 {
+    font-size: 1.25rem;
+    margin: 12px 0;
+    color: var(--green-dark);
+}
 
-// Inputs
-const usernameInput = document.getElementById("username");
-const dutyStartInput = document.getElementById("dutyStart");
-const fatigueDaySelect = document.getElementById("fatigueDay");
-const shiftTypeSelect = document.getElementById("shiftType");
-const caffeineSinceSelect = document.getElementById("caffeineSince");
-const nicotineSinceSelect = document.getElementById("nicotineSince");
+.note {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
 
-// --- Calibration logic ---
+.note.small {
+    font-size: 0.85rem;
+}
 
-startCalibrationBtn.addEventListener("click", () => {
-    startCalibration();
-});
+/* FORM ELEMENTS */
+.form-group {
+    margin-bottom: 14px;
+}
 
-function startCalibration() {
-    calibrationEvents = [];
-    calibrationMetrics = {
-        samplingRateHz: null,
-        meanDtMs: null,
-        jitterMs: null,
-        durationMs: null,
-        eventCount: 0,
-        calibrationFactor: null
-    };
-    calibrationSummary.classList.add("hidden");
-    calibrationSummary.textContent = "";
+label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
 
-    isCalibrating = false;
-    if (calibrationTimer) {
-        clearTimeout(calibrationTimer);
-        calibrationTimer = null;
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.05rem;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+    background: #ffffff;
+}
+
+/* BUTTONS */
+.primary-btn,
+.secondary-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.primary-btn {
+    background: var(--green-main);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.primary-btn:active {
+    background: var(--green-dark);
+}
+
+.secondary-btn {
+    background: #e0e6e4;
+    color: var(--text-main);
+}
+
+.secondary-btn:active {
+    background: #cfd6d3;
+}
+
+.hidden {
+    display: none;
+}
+
+/* CALIBRATION SLIDER */
+#calibrationArea {
+    margin-top: 20px;
+    padding: 14px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #dde3e0;
+}
+
+.calib-instruction {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.arrow-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.arrow {
+    font-size: 2.2rem;
+}
+
+#sliderTrack {
+    position: relative;
+    width: 100%;
+    height: 44px;
+    background: #e3ece8;
+    border-radius: 22px;
+    overflow: hidden;
+}
+
+#sliderHandle {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--green-main);
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+.hint {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+/* TEST AREA */
+#testArea {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#stimulus {
+    width: 100%;
+    max-width: 340px;
+    height: 200px;
+    border-radius: 12px;
+    background: #cccccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #222222;
+    user-select: none;
+}
+
+#stimulus.green {
+    background: #2ecc71;
+    color: #ffffff;
+}
+
+/* RESULTS */
+.summary-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #dde3e0;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+}
+
+.results-pre {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #dde3e0;
+    padding: 12px;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 480px) {
+    .app-header h1 {
+        font-size: 1.25rem;
     }
-
-    alert("Press and hold on the bar, then slide smoothly from left to right for about 5 seconds.");
-
-    // User starts calibration by touching/pressing the track
-}
-
-function beginCalibrationTracking() {
-    if (isCalibrating) return;
-    isCalibrating = true;
-    calibrationEvents = [];
-    calibrationStartTime = performance.now();
-
-    calibrationTimer = setTimeout(() => {
-        endCalibration();
-    }, 5000);
-}
-
-function recordCalibrationEvent(clientX) {
-    if (!isCalibrating) return;
-    const t = performance.now();
-    calibrationEvents.push({ t, x: clientX });
-    // Move handle visually
-    const rect = sliderTrack.getBoundingClientRect();
-    let relX = clientX - rect.left;
-    if (relX < 4) relX = 4;
-    if (relX > rect.width - 36) relX = rect.width - 36;
-    sliderHandle.style.left = relX + "px";
-}
-
-function endCalibration() {
-    if (!isCalibrating) return;
-    isCalibrating = false;
-    if (calibrationTimer) {
-        clearTimeout(calibrationTimer);
-        calibrationTimer = null;
+    #stimulus {
+        height: 220px;
+        font-size: 1.7rem;
     }
-
-    if (calibrationEvents.length < 3) {
-        calibrationSummary.classList.remove("hidden");
-        calibrationSummary.textContent = "Calibration failed: not enough movement detected. Please try again.";
-        return;
-    }
-
-    const times = calibrationEvents.map(e => e.t);
-    const dts = [];
-    for (let i = 1; i < times.length; i++) {
-        dts.push(times[i] - times[i - 1]);
-    }
-
-    const meanDt = avg(dts);
-    const jitter = stdDev(dts);
-    const duration = times[times.length - 1] - times[0];
-    const samplingRate = 1000 / meanDt;
-
-    const factor = (meanDt + jitter) / samplingRate;
-
-    calibrationMetrics = {
-        samplingRateHz: samplingRate,
-        meanDtMs: meanDt,
-        jitterMs: jitter,
-        durationMs: duration,
-        eventCount: calibrationEvents.length,
-        calibrationFactor: factor
-    };
-
-    const summaryText =
-`Calibration complete:
-
-Events: ${calibrationMetrics.eventCount}
-Duration: ${calibrationMetrics.durationMs.toFixed(1)} ms
-Sampling rate: ${calibrationMetrics.samplingRateHz.toFixed(1)} Hz
-Mean interval: ${calibrationMetrics.meanDtMs.toFixed(1)} ms
-Jitter (SD): ${calibrationMetrics.jitterMs.toFixed(1)} ms
-Calibration factor: ${calibrationMetrics.calibrationFactor.toFixed(4)}`;
-
-    calibrationSummary.textContent = summaryText;
-    calibrationSummary.classList.remove("hidden");
-    toInputsBtn.classList.remove("hidden");
-}
-
-// Pointer / touch handling for slider
-
-function onPointerDown(e) {
-    e.preventDefault();
-    beginCalibrationTracking();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    recordCalibrationEvent(clientX);
-    window.addEventListener("mousemove", onPointerMove);
-    window.addEventListener("touchmove", onPointerMove, { passive: false });
-    window.addEventListener("mouseup", onPointerUp);
-    window.addEventListener("touchend", onPointerUp);
-}
-
-function onPointerMove(e) {
-    if (!isCalibrating) return;
-    e.preventDefault();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    recordCalibrationEvent(clientX);
-}
-
-function onPointerUp(e) {
-    e.preventDefault();
-    window.removeEventListener("mousemove", onPointerMove);
-    window.removeEventListener("touchmove", onPointerMove);
-    window.removeEventListener("mouseup", onPointerUp);
-    window.removeEventListener("touchend", onPointerUp);
-    // We let the 5s timer end calibration; user can lift early.
-}
-
-sliderTrack.addEventListener("mousedown", onPointerDown);
-sliderTrack.addEventListener("touchstart", onPointerDown, { passive: false });
-
-toInputsBtn.addEventListener("click", () => {
-    calibrationSection.classList.add("hidden");
-    inputsSection.classList.remove("hidden");
-});
-
-// --- PVG test logic ---
-
-startTestBtn.addEventListener("click", () => {
-    startTest();
-});
-
-function startTest() {
-    const name = usernameInput.value.trim();
-    if (!name) {
-        alert("Please enter your name or ID.");
-        return;
-    }
-
-    // Record date & time of test start
-    const now = new Date();
-    testStartDateString = now.toLocaleDateString();
-    testStartClock = now.toLocaleTimeString();
-
-    reactionTimes = [];
-    testRunning = true;
-    stimulusShown = false;
-
-    inputsSection.classList.add("hidden");
-    testSection.classList.remove("hidden");
-
-    testStartTime = performance.now();
-    scheduleStimulus();
-}
-
-function scheduleStimulus() {
-    if (!testRunning) return;
-
-    const delay = Math.random() * 5000 + 2000; // 2–7 seconds
-    stimulus.classList.remove("green");
-    stimulus.innerText = "Wait…";
-    stimulusShown = false;
-
-    setTimeout(() => {
-        if (!testRunning) return;
-        stimulus.classList.add("green");
-        stimulus.innerText = "TAP!";
-        stimulusShown = true;
-        stimulusTime = performance.now();
-    }, delay);
-}
-
-stimulus.addEventListener("click", () => {
-    handleStimulusTap();
-});
-stimulus.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    handleStimulusTap();
-}, { passive: false });
-
-function handleStimulusTap() {
-    if (!testRunning) return;
-
-    if (stimulusShown) {
-        const rt = performance.now() - stimulusTime;
-        reactionTimes.push(rt);
-        stimulusShown = false;
-        stimulus.classList.remove("green");
-        stimulus.innerText = "Recorded";
-    }
-
-    if (performance.now() - testStartTime >= testDuration) {
-        endTest();
-    } else {
-        scheduleStimulus();
-    }
-}
-
-function endTest() {
-    testRunning = false;
-    testSection.classList.add("hidden");
-    resultsSection.classList.remove("hidden");
-
-    const endNow = new Date();
-    testEndClock = endNow.toLocaleTimeString();
-
-    const name = usernameInput.value.trim();
-    const dutyStart = dutyStartInput.value || "Not set";
-    const fatigueDay = fatigueDaySelect.value;
-    const shiftType = shiftTypeSelect.value;
-    const caffeineSince = caffeineSinceSelect.value;
-    const nicotineSince = nicotineSinceSelect.value;
-
-    let mean = 0;
-    let median = 0;
-    let lapses = 0;
-    if (reactionTimes.length > 0) {
-        mean = avg(reactionTimes);
-        median = med(reactionTimes);
-        lapses = reactionTimes.filter(rt => rt > 500).length;
-    }
-
-    const tapList = reactionTimes
-        .map((rt, i) => `${i + 1}: ${rt.toFixed(1)} ms`)
-        .join("\n");
-
-    const device = navigator.userAgent;
-    const screenInfo = `${window.screen.width}x${window.screen.height} DPR:${window.devicePixelRatio}`;
-
-    const summary =
-`Clean Fuel T&I Fatigue Pilot
-
-Date: ${testStartDateString}
-Start Time: ${testStartClock}
-End Time: ${testEndClock}
-
-Name / ID: ${name}
-Continuous duty start: ${dutyStart}
-Time since fatigue day: ${fatigueDay}
-Shift type: ${shiftType}
-Time since last caffeine: ${caffeineSince}
-Time since last nicotine: ${nicotineSince}
-
-Calibration (this session):
-Events: ${calibrationMetrics.eventCount}
-Duration: ${calibrationMetrics.durationMs ? calibrationMetrics.durationMs.toFixed(1) : "N/A"} ms
-Sampling rate: ${calibrationMetrics.samplingRateHz ? calibrationMetrics.samplingRateHz.toFixed(1) : "N/A"} Hz
-Mean interval: ${calibrationMetrics.meanDtMs ? calibrationMetrics.meanDtMs.toFixed(1) : "N/A"} ms
-Jitter (SD): ${calibrationMetrics.jitterMs ? calibrationMetrics.jitterMs.toFixed(1) : "N/A"} ms
-Calibration factor: ${calibrationMetrics.calibrationFactor ? calibrationMetrics.calibrationFactor.toFixed(4) : "N/A"}
-
-PVG Test:
-Trials: ${reactionTimes.length}
-Mean RT: ${reactionTimes.length ? mean.toFixed(1) : "N/A"} ms
-Median RT: ${reactionTimes.length ? median.toFixed(1) : "N/A"} ms
-Lapses (>500 ms): ${lapses}
-
-Tap Responses (ms):
-${tapList || "No taps recorded."}
-
-Device: ${device}
-Screen: ${screenInfo}`;
-
-    resultText.innerText = summary;
-
-    shareBtn.onclick = () => {
-        const encoded = encodeURIComponent(summary);
-        window.location.href = `https://wa.me/?text=${encoded}`;
-    };
-}
-
-// --- Helpers ---
-
-function avg(arr) {
-    if (!arr.length) return 0;
-    return arr.reduce((a, b) => a + b, 0) / arr.length;
-}
-
-function med(arr) {
-    if (!arr.length) return 0;
-    const sorted = [...arr].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 !== 0
-        ? sorted[mid]
-        : (sorted[mid - 1] + sorted[mid]) / 2;
-}
-
-function stdDev(arr) {
-    if (arr.length < 2) return 0;
-    const mean = avg(arr);
-    const variance = avg(arr.map(x => (x - mean) ** 2));
-    return Math.sqrt(variance);
 }
