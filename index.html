@@ -2,32 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Clean Fuel T&I Fatigue Pilot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PVG Test</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header class="app-header">
+    <h1>Clean Fuel T&amp;I Fatigue Pilot</h1>
+</header>
 
-<div id="container">
-    <h1>PVG Reaction Test</h1>
+<main class="container">
 
-    <div id="instructions">
-        <p>This is a 2‑minute reaction test. When the screen turns GREEN, tap as fast as you can.</p>
-        <input id="username" placeholder="Enter your name or ID">
-        <button id="startBtn">Start Test</button>
-    </div>
+    <!-- Calibration Section -->
+    <section id="calibrationSection">
+        <h2>Step 1: Device Calibration</h2>
+        <p class="note">
+            Slide your finger smoothly across the bar for about 5 seconds. This helps compare results across devices.
+        </p>
 
-    <div id="testArea" class="hidden">
-        <div id="stimulus">Wait…</div>
-    </div>
+        <div id="calibrationArea">
+            <div id="sliderTrack">
+                <div id="sliderHandle"></div>
+            </div>
+            <p class="hint">Press and slide from left to right in one continuous motion.</p>
+        </div>
 
-    <div id="results" class="hidden">
+        <button id="startCalibrationBtn" class="primary-btn">Start Calibration</button>
+
+        <div id="calibrationSummary" class="hidden summary-box"></div>
+
+        <button id="toInputsBtn" class="secondary-btn hidden">Continue to Test Setup</button>
+    </section>
+
+    <!-- Inputs Section -->
+    <section id="inputsSection" class="hidden">
+        <h2>Step 2: Duty &amp; Fatigue Context</h2>
+
+        <div class="form-group">
+            <label for="username">Name / ID</label>
+            <input type="text" id="username" placeholder="Enter your name or ID">
+        </div>
+
+        <div class="form-group">
+            <label for="dutyStart">Start date of continuous duty</label>
+            <input type="date" id="dutyStart">
+        </div>
+
+        <div class="form-group">
+            <label for="fatigueDay">Time since fatigue day</label>
+            <select id="fatigueDay">
+                <option value="N/A">N/A (no fatigue day yet)</option>
+                <option value="0 days">Less than 1 day</option>
+                <option value="1 day">1 day</option>
+                <option value="2 days">2 days</option>
+                <option value="3 days">3 days</option>
+                <option value="4 days">4 days</option>
+                <option value="5 days">5 days</option>
+                <option value="6 days">6 days</option>
+                <option value="7 days">7 days</option>
+            </select>
+            <p class="note small">Choose N/A if no fatigue day yet.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="shiftType">Shift type</label>
+            <select id="shiftType">
+                <option value="Day shift">Day shift</option>
+                <option value="Night shift">Night shift</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="caffeineSince">Time since last caffeine drink</label>
+            <select id="caffeineSince">
+                <option value="&lt;1 hour">Less than 1 hour</option>
+                <option value="1–3 hours">1–3 hours</option>
+                <option value="3–6 hours">3–6 hours</option>
+                <option value="&gt;6 hours">More than 6 hours</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="nicotineSince">Time since last nicotine intake</label>
+            <select id="nicotineSince">
+                <option value="&lt;1 hour">Less than 1 hour</option>
+                <option value="1–3 hours">1–3 hours</option>
+                <option value="3–6 hours">3–6 hours</option>
+                <option value="&gt;6 hours">More than 6 hours</option>
+            </select>
+        </div>
+
+        <button id="startTestBtn" class="primary-btn">Start 2‑minute PVG Test</button>
+    </section>
+
+    <!-- Test Section -->
+    <section id="testSection" class="hidden">
+        <h2>Step 3: Reaction Test</h2>
+        <p class="note">Wait until the box turns green, then tap as quickly as you can.</p>
+
+        <div id="testArea">
+            <div id="stimulus">Wait…</div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="resultsSection" class="hidden">
         <h2>Results</h2>
-        <pre id="resultText"></pre>
-        <button id="shareBtn">Share via WhatsApp</button>
-        <button onclick="location.reload()">Restart</button>
-    </div>
-</div>
+        <pre id="resultText" class="results-pre"></pre>
+        <button id="shareBtn" class="primary-btn">Share via WhatsApp</button>
+    </section>
+
+</main>
 
 <script src="script.js"></script>
 </body>
