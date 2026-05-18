@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 <header class="app-header">
     <h1>Clean Fuel T&amp;I Fatigue Pilot</h1>
@@ -13,28 +14,32 @@
 
 <main class="container">
 
-    <!-- Calibration Section -->
+    <!-- CALIBRATION SECTION -->
     <section id="calibrationSection">
-        <h2>Step 1: Device Calibration</h2>
-        <p class="note">
-            Slide your finger smoothly across the bar for about 5 seconds. This helps compare results across devices.
-        </p>
+        <h2>Step 1: Pre‑Test Calibration</h2>
 
-        <div id="calibrationArea">
+        <button id="startCalibrationBtn" class="primary-btn">
+            Start Pre‑Test Calibration
+        </button>
+
+        <div id="calibrationArea" class="hidden">
+            <p class="calib-instruction">Slide in this direction:</p>
+
+            <div class="arrow-container">
+                <span class="arrow">➡️</span>
+            </div>
+
             <div id="sliderTrack">
                 <div id="sliderHandle"></div>
             </div>
-            <p class="hint">Press and slide from left to right in one continuous motion.</p>
+
+            <p class="hint">Touch the green circle and slide smoothly to the right for 5 seconds.</p>
         </div>
 
-        <button id="startCalibrationBtn" class="primary-btn">Start Calibration</button>
-
         <div id="calibrationSummary" class="hidden summary-box"></div>
-
-        <button id="toInputsBtn" class="secondary-btn hidden">Continue to Test Setup</button>
     </section>
 
-    <!-- Inputs Section -->
+    <!-- INPUTS SECTION -->
     <section id="inputsSection" class="hidden">
         <h2>Step 2: Duty &amp; Fatigue Context</h2>
 
@@ -61,7 +66,6 @@
                 <option value="6 days">6 days</option>
                 <option value="7 days">7 days</option>
             </select>
-            <p class="note small">Choose N/A if no fatigue day yet.</p>
         </div>
 
         <div class="form-group">
@@ -75,27 +79,27 @@
         <div class="form-group">
             <label for="caffeineSince">Time since last caffeine drink</label>
             <select id="caffeineSince">
-                <option value="&lt;1 hour">Less than 1 hour</option>
+                <option value="<1 hour">Less than 1 hour</option>
                 <option value="1–3 hours">1–3 hours</option>
                 <option value="3–6 hours">3–6 hours</option>
-                <option value="&gt;6 hours">More than 6 hours</option>
+                <option value=">6 hours">More than 6 hours</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="nicotineSince">Time since last nicotine intake</label>
             <select id="nicotineSince">
-                <option value="&lt;1 hour">Less than 1 hour</option>
+                <option value="<1 hour">Less than 1 hour</option>
                 <option value="1–3 hours">1–3 hours</option>
                 <option value="3–6 hours">3–6 hours</option>
-                <option value="&gt;6 hours">More than 6 hours</option>
+                <option value=">6 hours">More than 6 hours</option>
             </select>
         </div>
 
         <button id="startTestBtn" class="primary-btn">Start 2‑minute PVG Test</button>
     </section>
 
-    <!-- Test Section -->
+    <!-- TEST SECTION -->
     <section id="testSection" class="hidden">
         <h2>Step 3: Reaction Test</h2>
         <p class="note">Wait until the box turns green, then tap as quickly as you can.</p>
@@ -105,7 +109,7 @@
         </div>
     </section>
 
-    <!-- Results Section -->
+    <!-- RESULTS SECTION -->
     <section id="resultsSection" class="hidden">
         <h2>Results</h2>
         <pre id="resultText" class="results-pre"></pre>
