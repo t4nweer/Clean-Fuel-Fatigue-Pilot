@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    margin: 40px auto;
+    max-width: 500px;
+}
+
+button {
+    padding: 15px 25px;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+#stimulus {
+    margin-top: 50px;
+    padding: 80px;
+    font-size: 40px;
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.green {
+    background: #4CAF50 !important;
+    color: white;
+}
+
+.red {
+    background: #d9534f !important;
+    color: white;
+}

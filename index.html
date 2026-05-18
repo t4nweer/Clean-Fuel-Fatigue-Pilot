@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVG Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="container">
+    <h1>PVG Reaction Test</h1>
+
+    <div id="instructions">
+        <p>This is a 2‑minute reaction test. When the screen turns GREEN, tap as fast as you can.</p>
+        <input id="username" placeholder="Enter your name or ID">
+        <button id="startBtn">Start Test</button>
+    </div>
+
+    <div id="testArea" class="hidden">
+        <div id="stimulus">Wait…</div>
+    </div>
+
+    <div id="results" class="hidden">
+        <h2>Results</h2>
+        <pre id="resultText"></pre>
+        <button id="shareBtn">Share via WhatsApp</button>
+        <button onclick="location.reload()">Restart</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
